@@ -1,0 +1,102 @@
+@import "normalize.css";
+
+:root {
+  font-size: 10px;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+@mixin setCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  @include setCenter();
+}
+
+@mixin cardSetting($nth) {
+  background-repeat: no-repeat;
+  //如果图片小，不会变成好多图片占满空间
+
+  background-position: center;
+  background-size: cover;
+  @if $nth == 1 {
+    width: 120rem;
+    min-width: 120rem;
+    // 最小宽是为了flexbox不变形，窗口缩小的时候，图片不会缩小
+
+    aspect-ratio: 16/9;
+    // 统一图片大小为16比9
+
+    box-shadow: 0 0 1rem #bebebe;
+  } @else {
+    position: absolute;
+    // 用absolute脱离文档流，就可以放在别的地方，不用遵循flexbox
+
+    width: 20rem;
+    border-radius: 1rem;
+    aspect-ratio: 2/3;
+    box-shadow: 0 30px 50px #505050;
+    left: calc(50% + ($nth - 2) * 22rem);
+  }
+}
+
+$cardArray: (2, 3, 4);
+
+.card {
+  transition: 0.5s;
+  &:nth-child(1) {
+    transition: none;
+    @include cardSetting(1);
+  }
+  @each $i in $cardArray {
+    &:nth-child(#{$i}) {
+      @include cardSetting(#{$i});
+    }
+  }
+  &::nth-child(n + 5) {
+    left: calc(50% + 3 * 22rem);
+    @include cardSetting(5);
+    opacity: 0;
+  }
+}
+
+.cardGroup {
+  position: relative;
+  @include setCenter();
+}
+
+.buttonGroup {
+  @include setCenter();
+  position: absolute;
+  bottom: 5rem;
+  gap: 2rem;
+}
+
+.button {
+  background-color: #6497bc;
+  width: 4rem;
+  aspect-ratio: 1/1;
+  @include setCenter();
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px #505050;
+
+  &:active {
+    box-shadow: none;
+  }
+}
